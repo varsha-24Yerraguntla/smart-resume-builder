@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function ResumeForm() {
   const [form, setForm] = useState({
@@ -11,7 +12,7 @@ function ResumeForm() {
     summary: "",
   });
 
-  // AI GENERATE (mock logic for now)
+  // AI GENERATE
   const generateAI = () => {
     const aiText = `Highly motivated candidate with skills in ${form.skills}. 
 Strong background in ${form.education}. 
@@ -23,6 +24,22 @@ Eager to contribute and grow in a professional environment.`;
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // ✅ SAVE RESUME (ADDED)
+  const saveResume = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/resume",
+        form
+      );
+
+      alert("Resume Saved Successfully ✅");
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+      alert("Error saving resume ❌");
+    }
   };
 
   return (
@@ -58,7 +75,11 @@ Eager to contribute and grow in a professional environment.`;
           🤖 Generate AI Summary
         </button>
 
-        <button className="bg-blue-500 py-2 rounded hover:bg-blue-600">
+        {/* SAVE BUTTON (FIXED) */}
+        <button
+          onClick={saveResume}
+          className="bg-blue-500 py-2 rounded hover:bg-blue-600"
+        >
           Save Resume
         </button>
 
